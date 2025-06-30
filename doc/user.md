@@ -106,7 +106,7 @@ Response Body Success:
 
 ```json
 {
-  "data": {
+  "data": [
     {
       "username": "user123",
       "email": "user@gmail.com",
@@ -122,7 +122,7 @@ Response Body Success:
       "email": "user789@gmail.com",
       "role": "admin"
     }
-  }
+  ]
 }
 ```
 
