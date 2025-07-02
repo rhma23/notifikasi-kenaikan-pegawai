@@ -1,8 +1,8 @@
-# Branch API specification
+# Unit API specification
 
-## Create Branch API
+## Create Unit API
 
-Endpoint: POST /api/branch
+Endpoint: POST /api/unit
 
 Headers:
 
@@ -12,7 +12,7 @@ Body Request:
 
 ```json
 {
-  "branchName": "Subang"
+  "unitName": "Subang"
 }
 ```
 
@@ -21,7 +21,7 @@ Body Response Success:
 ```json
 {
   "data": {
-    "branchName": "Subang"
+    "unitName": "Subang"
   }
 }
 ```
@@ -30,13 +30,13 @@ Body Response error:
 
 ```json
 {
-  "errors": "Branch Name can't be empty"
+  "errors": "Unit Name can't be empty"
 }
 ```
 
-## Get All Branch API
+## Get All Unit API
 
-Endpoint: GET /api/branch
+Endpoint: GET /api/unit
 
 Headers:
 
@@ -48,13 +48,13 @@ Body Response Success:
 {
   "data": [
     {
-      "branchName": "Subang"
+      "unitName": "Subang"
     },
     {
-      "branchName": "Kalijati"
+      "unithName": "Kalijati"
     },
     {
-      "branchName": "Ciasem"
+      "unitName": "Ciasem"
     }
   ]
 }
@@ -68,9 +68,9 @@ Body Response error:
 }
 ```
 
-## Get Single Branch API
+## Get Single Unit API
 
-Endpoint: GET /api/branch/:id
+Endpoint: GET /api/unit/:id
 
 Headers:
 
@@ -82,7 +82,7 @@ Body Response Success:
 {
   "data": {
     "id": "1",
-    "branchName": "Subang"
+    "unitName": "Subang"
   }
 }
 ```
@@ -95,9 +95,9 @@ Body Response error:
 }
 ```
 
-## Update Branch API
+## Update Unit API
 
-Endpoint: PUT /api/branch/:id
+Endpoint: PUT /api/unit/:id
 
 Headers:
 
@@ -107,7 +107,7 @@ Body Request:
 
 ```json
 {
-  "branchName": "Subang"
+  "unitName": "Subang"
 }
 ```
 
@@ -117,7 +117,7 @@ Body Response Success:
 {
   "data": {
     "id": "1",
-    "branchName": "Subang"
+    "unitName": "Subang"
   }
 }
 ```
@@ -126,13 +126,13 @@ Body Response error:
 
 ```json
 {
-  "errors": "Branch Name can't be empty"
+  "errors": "Unit Name can't be empty"
 }
 ```
 
-## Search Branch API
+## Search Unit API
 
-Endpoint: GET /api/branch
+Endpoint: GET /api/unit
 
 Headers:
 
@@ -140,22 +140,22 @@ Headers:
 
 Query params :
 
-- branchName : Search by branchName, using like, optional
+- unitName : Search by unitName, using like, optional
 - page : number of page, default 1
 - size : size per page, default 10
 
-Body Request:
+Body Response Success:
 
 ```json
 {
   "data": [
     {
       "id": 1,
-      "branchName": "Subang"
+      "unitName": "Subang"
     },
     {
       "id": 2,
-      "branchName": "Kalijati"
+      "unitName": "Kalijati"
     }
   ],
   "paging": {
@@ -166,9 +166,9 @@ Body Request:
 }
 ```
 
-## Delete Branch API
+## Delete Unit API
 
-Endpoint: Delete /api/branch/:id
+Endpoint: Delete /api/unit/:id
 
 Headers:
 
@@ -186,6 +186,6 @@ Body Response error:
 
 ```json
 {
-  "errors": "contact is not found"
+  "errors": "unit is not found"
 }
 ```

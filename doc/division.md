@@ -1,8 +1,8 @@
-# Branch API specification
+# Division API specification
 
-## Create Branch API
+## Create Division API
 
-Endpoint: POST /api/branch
+Endpoint: POST /api/division
 
 Headers:
 
@@ -12,7 +12,7 @@ Body Request:
 
 ```json
 {
-  "branchName": "Subang"
+  "divisionName": "IT"
 }
 ```
 
@@ -21,7 +21,8 @@ Body Response Success:
 ```json
 {
   "data": {
-    "branchName": "Subang"
+    "divisionId": "1",
+    "divisionName": "IT"
   }
 }
 ```
@@ -30,13 +31,13 @@ Body Response error:
 
 ```json
 {
-  "errors": "Branch Name can't be empty"
+  "errors": "Division Name can't be empty"
 }
 ```
 
-## Get All Branch API
+## Get All Division API
 
-Endpoint: GET /api/branch
+Endpoint: GET /api/division
 
 Headers:
 
@@ -48,13 +49,16 @@ Body Response Success:
 {
   "data": [
     {
-      "branchName": "Subang"
+      "divisionId": "1",
+      "divisionName": "IT"
     },
     {
-      "branchName": "Kalijati"
+      "divisionId": "2",
+      "divisionhName": "Kepegawaian"
     },
     {
-      "branchName": "Ciasem"
+      "divisionId": "3",
+      "DivisionName": "Umum"
     }
   ]
 }
@@ -68,9 +72,9 @@ Body Response error:
 }
 ```
 
-## Get Single Branch API
+## Get Single Division API
 
-Endpoint: GET /api/branch/:id
+Endpoint: GET /api/division/:id
 
 Headers:
 
@@ -81,8 +85,8 @@ Body Response Success:
 ```json
 {
   "data": {
-    "id": "1",
-    "branchName": "Subang"
+    "divisionId": "1",
+    "divisionName": "Kepegawaian"
   }
 }
 ```
@@ -95,9 +99,9 @@ Body Response error:
 }
 ```
 
-## Update Branch API
+## Update Division API
 
-Endpoint: PUT /api/branch/:id
+Endpoint: PUT /api/division/:id
 
 Headers:
 
@@ -107,7 +111,7 @@ Body Request:
 
 ```json
 {
-  "branchName": "Subang"
+  "divisionName": "Kepegawaian"
 }
 ```
 
@@ -116,8 +120,8 @@ Body Response Success:
 ```json
 {
   "data": {
-    "id": "1",
-    "branchName": "Subang"
+    "divisionId": "1",
+    "divisionName": "Kepegawaian"
   }
 }
 ```
@@ -126,13 +130,13 @@ Body Response error:
 
 ```json
 {
-  "errors": "Branch Name can't be empty"
+  "errors": "Division Name can't be empty"
 }
 ```
 
-## Search Branch API
+## Search Division API
 
-Endpoint: GET /api/branch
+Endpoint: GET /api/division
 
 Headers:
 
@@ -140,22 +144,22 @@ Headers:
 
 Query params :
 
-- branchName : Search by branchName, using like, optional
+- divisionName : Search by divisionName, using like, optional
 - page : number of page, default 1
 - size : size per page, default 10
 
-Body Request:
+Body Response Success:
 
 ```json
 {
   "data": [
     {
-      "id": 1,
-      "branchName": "Subang"
+      "divisionId": 1,
+      "divisionName": "IT"
     },
     {
-      "id": 2,
-      "branchName": "Kalijati"
+      "divisionId": 2,
+      "divisionName": "Kalijati"
     }
   ],
   "paging": {
@@ -166,9 +170,9 @@ Body Request:
 }
 ```
 
-## Delete Branch API
+## Delete Division API
 
-Endpoint: Delete /api/branch/:id
+Endpoint: Delete /api/division/:id
 
 Headers:
 
@@ -186,6 +190,6 @@ Body Response error:
 
 ```json
 {
-  "errors": "contact is not found"
+  "errors": "Division is not found"
 }
 ```
