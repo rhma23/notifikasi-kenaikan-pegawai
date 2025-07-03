@@ -1,0 +1,235 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Branch {
+  branchId Int @id @default(autoincrement())
+  branchName String @db.VarChar(100)
+  placements Placement[]
+}
+
+model Unit {
+  unitId    Int @id @default(autoincrement()) 
+  name      String @db.VarChar(100)             
+  placements Placement[]
+}
+
+model Division {
+  divisionId Int @id @default(autoincrement()) 
+  name String @db.VarChar(100)             
+  placements Placement[]
+}
+
+model Education {
+  educationId Int     @id @default(autoincrement()) 
+  level     String    @db.VarChar(35)              
+  major     String    @db.VarChar(50)              
+  employees Employee[]
+}
+
+
+model Position {
+  positionId Int  @id @default(autoincrement()) 
+  title String    @db.VarChar(35) 
+  employees Employee[]
+}
+
+model BaseSalary {
+  id Int @id @default(autoincrement())
+  amount    Int      
+  grade     String    @db.VarChar(100)              
+  serviceYears String?                            
+  grades     Grade[]
+  salaryHistories SalaryHistory[]
+}
+
+model Grade {
+  gradeId         Int       @id @default(autoincrement()) 
+  baseSalaryId Int    
+  title      String    @db.VarChar(100)             
+  grade      String    @db.VarChar(100)            
+
+  baseSalary BaseSalary @relation(fields: [baseSalaryId], references: [id])
+  employees  Employee[]
+  gradeHistories GradeHistory[]
+  salaryHistories SalaryHistory[]
+}
+
+model User {
+  userId        Int       @id @default(autoincrement())
+  username  String    @db.VarChar(100)
+  password  String    @db.VarChar(255)
+  email     String    @db.VarChar(100)
+  role      Role
+  token     String    @db.VarChar(255)
+
+  employees Employee[]
+  recommendations Recommendation[]
+}
+
+enum Role {
+  admin
+  manager
+  director
+  employee
+}
+
+
+model Employee {
+  id              Int       @id @default(autoincrement())
+  userId          Int      
+  educationId     Int      
+  gradeId          Int      
+  positionId      Int       
+  fullName        String    
+  nipp  String   @unique
+  birthPlace      String    
+  birthDate       DateTime  
+  gender          Gender    
+  kkNumber      String    @db.Char(16)      @unique           
+  nik      String    @db.Char(16)        @unique          
+  employeeStatus  EmployeeStatus 
+  familyStatus    FamilyStatus  
+  address         String    @db.VarChar(255)
+  photoUrl        String    @db.VarChar(255)             
+
+  user            User      @relation(fields: [userId], references: [userId])
+  education       Education @relation(fields: [educationId], references: [educationId])
+  grade            Grade      @relation(fields: [gradeId], references: [gradeId])
+  position        Position  @relation(fields: [positionId], references: [positionId])
+
+  familyMembers   FamilyMember[]
+  infractions     Infraction[]
+  gradeHistories   GradeHistory[]
+  salaryHistories SalaryHistory[]
+  placements      Placement[]
+  recommendations Recommendation[]
+}
+
+enum Gender {
+  male  @map("l")
+  female @map("p")
+}
+
+enum EmployeeStatus {
+  sukan @map("sukan")
+  contract @map("honorer")
+  honorary @map("kontrak")
+  trainee  @map("capeg")
+  permanent_honorer @map("hor_tap")
+  permanent_employee @map("peg_tap")
+}
+
+enum FamilyStatus {
+  child   @map("anak")
+  wife    @map("istri")
+  husband @map("suami")
+}
+
+model FamilyMember {
+  id           Int       @id @default(autoincrement()) 
+  employeeId   Int      
+  nik   String    @db.Char(16) @unique              
+  name         String    @db.VarChar(100)
+  birthPlace   String    @db.VarChar(100)
+  birthDate    DateTime 
+  gender       Gender    
+  marriageDate DateTime? 
+  familyStatus EmployeeStatus 
+
+  employee     Employee  @relation(fields: [employeeId], references: [id])
+}
+
+model Infraction {
+  id           Int       @id @default(autoincrement())
+  employeeId   Int      
+  decreeNumber String    @db.VarChar(50)              
+  name         String    @db.VarChar(255)             
+  description  String    @db.VarChar(255)             
+
+  employee     Employee  @relation(fields: [employeeId], references: [id])
+}
+
+model SalaryHistory {
+  id           Int       @id @default(autoincrement())
+  employeeId   Int      
+  gradeId       Int      
+  baseSalaryId Int       
+  amount       Int       
+  effectiveDate DateTime 
+
+  employee     Employee  @relation(fields: [employeeId], references: [id])
+  grade         Grade      @relation(fields: [gradeId], references: [gradeId])
+  baseSalary   BaseSalary @relation(fields: [baseSalaryId], references: [id])
+}
+
+model GradeHistory {
+  gradeHistoryId            Int       @id @default(autoincrement()) 
+  employeeId    Int      
+  gradeId       Int      
+  rankName      String    @db.VarChar(100)             
+  gradeName     String    @db.VarChar(100)              
+  effectiveDate DateTime  
+
+  employee      Employee  @relation(fields: [employeeId], references: [id])
+  grade         Grade     @relation(fields: [gradeId], references: [gradeId])
+}
+
+model Placement {
+  placementId           Int       @id @default(autoincrement())
+  employeeId   Int     
+  branchId     Int       
+  unitId       Int      
+  divisionId   Int      
+  placementType PlacementType 
+  effectiveDate DateTime  
+
+  employee     Employee  @relation(fields: [employeeId], references: [id])
+  branch       Branch    @relation(fields: [branchId], references: [branchId])
+  unit         Unit      @relation(fields: [unitId], references: [unitId])
+  division     Division  @relation(fields: [divisionId], references: [divisionId])
+}
+
+enum PlacementType {
+  branch   @map("cabang")
+  center   @map("pusat")
+  unit     @map("unit")
+}
+
+model Recommendation {
+  RecommendationId                 Int       @id @default(autoincrement()) 
+  employeeId         Int      
+  userId             Int       
+  recommendationDate DateTime  
+  status             RecommendationStatus 
+  type               RecommendationType   
+  processDate        DateTime?            
+  fileCode           String               @db.VarChar(255) 
+
+  employee           Employee  @relation(fields: [employeeId], references: [id])
+  user               User      @relation(fields: [userId], references: [userId])
+}
+
+enum RecommendationStatus {
+  received   @map("diterima")
+  delayed    @map("ditunda")
+  approved   @map("disetujui")
+  completed  @map("selesai")
+}
+
+enum RecommendationType {
+  salary     @map("gaji")
+  rank       @map("pangkat")
+}
