@@ -7,7 +7,7 @@ import {
 } from "../validation/user-validation.js";
 import { prismaClient } from "../application/database.js";
 import { ResponseError } from "../error/response-error.js";
-import bcrypt from "bcrypt"; // ✅ direct named import
+import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
 
 const create = async (request) => {
@@ -29,7 +29,8 @@ const create = async (request) => {
     data: user,
     select: {
       username: true,
-      name: true,
+      email: true,
+      role: true,
     },
   });
 };
@@ -153,7 +154,7 @@ const logout = async (username) => {
 };
 
 export default {
-  register,
+  create,
   login,
   get,
   update,

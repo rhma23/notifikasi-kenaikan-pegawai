@@ -6,14 +6,12 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
-
 model Branch {
   branchId Int @id @default(autoincrement())
   branchName String @db.VarChar(100)
@@ -69,11 +67,11 @@ model Grade {
 
 model User {
   userId        Int       @id @default(autoincrement())
-  username  String    @db.VarChar(100)
+  username  String    @db.VarChar(100) @unique
   password  String    @db.VarChar(255)
   email     String    @db.VarChar(100)
   role      Role
-  token     String    @db.VarChar(255)
+  token     String?    @db.VarChar(255)
 
   employees Employee[]
   recommendations Recommendation[]

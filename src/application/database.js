@@ -1,4 +1,3 @@
-// filepath: d:\2025\nodejs-restfull-api\src\application\database.js
 import pkg from "@prisma/client";
 const { PrismaClient } = pkg;
 import logger from "../application/logging.js";
