@@ -70,6 +70,7 @@ model User {
   username  String    @db.VarChar(100) @unique
   password  String    @db.VarChar(255)
   email     String    @db.VarChar(100)
+  phoneNumber     String @db.Char(15)
   role      Role
   token     String?    @db.VarChar(255)
 
@@ -78,10 +79,10 @@ model User {
 }
 
 enum Role {
-  admin
-  manager
-  director
-  employee
+  admin @map("admin")
+  manager @map("magager")
+  director @map("direksi")
+  employee @map("karyawan")
 }
 
 

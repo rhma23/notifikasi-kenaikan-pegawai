@@ -47,6 +47,7 @@ const update = async (req, res, next) => {
       data: result,
     });
   } catch (e) {
+    console.log(e);
     next(e);
   }
 };

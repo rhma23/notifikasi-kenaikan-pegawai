@@ -30,6 +30,7 @@ const create = async (request) => {
     select: {
       username: true,
       email: true,
+      phoneNumber: true,
       role: true,
     },
   });
@@ -83,7 +84,9 @@ const get = async (username) => {
     },
     select: {
       username: true,
-      name: true,
+      email: true,
+      phoneNumber: true,
+      role: true,
     },
   });
 
@@ -108,8 +111,14 @@ const update = async (request) => {
   }
 
   const data = {};
-  if (user.name) {
-    data.name = user.name;
+  if (user.email) {
+    data.email = user.email;
+  }
+  if (user.phoneNumber) {
+    data.phoneNumber = user.phoneNumber;
+  }
+  if (user.role) {
+    data.role = user.role;
   }
   if (user.password) {
     data.password = await bcrypt.hash(user.password, 10);
@@ -122,7 +131,9 @@ const update = async (request) => {
     data: data,
     select: {
       username: true,
-      name: true,
+      email: true,
+      phoneNumber: true,
+      role: true,
     },
   });
 };

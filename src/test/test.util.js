@@ -13,7 +13,8 @@ export const createTestUser = async () => {
     data: {
       username: "test",
       password: await bcrypt.hash("rahasia", 10),
-      email: "test",
+      email: "test@gmail.com",
+      phoneNumber: "08978974515",
       role: "admin",
       token: "test",
     },
@@ -28,13 +29,29 @@ export const getTestUser = async () => {
   });
 };
 
-// export const removeAllTestContacts = async () => {
-//   await prismaClient.contact.deleteMany({
-//     where: {
-//       username: "test",
-//     },
-//   });
-// };
+export const createTestBranch = async () => {
+  await prismaClient.branch.create({
+    data: {
+      branchName: "test",
+    },
+  });
+};
+
+export const removeAllTestBranch = async () => {
+  await prismaClient.branch.deleteMany({
+    where: {
+      branchId: 1,
+    },
+  });
+};
+
+export const getTestBranch = async () => {
+  return prismaClient.branch.findUnique({
+    where: {
+      branchId: 1,
+    },
+  });
+};
 
 // export const createTestContact = async () => {
 //   await prismaClient.contact.create({
