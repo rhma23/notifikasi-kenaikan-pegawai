@@ -7,6 +7,7 @@ const validate = (schema, request) => {
     allowUnknown: false, // Allow unknown keys in the request
   });
   if (result.error) {
+    console.error("Validation error:", result.error.message);
     throw new ResponseError(400, result.error.message);
   } else {
     return result.value;

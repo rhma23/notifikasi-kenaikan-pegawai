@@ -38,37 +38,55 @@ export const createTestBranch = async () => {
 };
 
 export const removeAllTestBranch = async () => {
-  await prismaClient.branch.deleteMany({
-    where: {
-      branchId: 1,
-    },
-  });
+  await prismaClient.branch.deleteMany({});
 };
 
 export const getTestBranch = async () => {
-  return prismaClient.branch.findUnique({
-    where: {
-      branchId: 1,
+  return prismaClient.branch.findFirst({
+    where: { branchName: "test" },
+  });
+};
+
+export const createManyTestBranches = async () => {
+  for (let i = 0; i < 15; i++) {
+    await prismaClient.branch.create({
+      data: {
+        branchName: `test ${i}`,
+      },
+    });
+  }
+};
+
+export const createTestUnit = async () => {
+  await prismaClient.unit.create({
+    data: {
+      unitName: "test",
     },
   });
 };
 
-// export const createTestContact = async () => {
-//   await prismaClient.contact.create({
-//     data: {
-//       username: "test",
-//       first_name: "test",
-//       last_name: "test",
-//       email: "test@gmail.com",
-//       phone: "00897877877",
-//     },
-//   });
-// };
+export const removeAllTestUnit = async () => {
+  await prismaClient.unit.deleteMany({});
+};
 
-// export const getTestContact = async () => {
-//   return prismaClient.contact.findFirst({
-//     where: {
-//       username: "test",
-//     },
-//   });
-// };
+export const getTestUnit = async () => {
+  return prismaClient.unit.findFirst({
+    where: { unitName: "test" },
+  });
+};
+
+export const removeAllTestDivision = async () => {
+  await prismaClient.division.deleteMany({}); // Delete all divisions for clean state
+};
+export const createTestDivision = async () => {
+  await prismaClient.division.create({
+    data: {
+      divisionName: "test",
+    },
+  });
+};
+export const getTestDivision = async () => {
+  return prismaClient.division.findFirst({
+    where: { divisionName: "test" },
+  });
+};

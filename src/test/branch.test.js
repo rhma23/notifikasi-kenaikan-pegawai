@@ -8,6 +8,7 @@ import {
   removeTestUser,
   createTestBranch,
   getTestBranch,
+  createManyTestBranches,
 } from "./test.util.js";
 import bcrypt from "bcrypt";
 const server = http.createServer(web);
@@ -81,39 +82,130 @@ describe("GET /api/branch", () => {
   });
 });
 
-// describe("GET /api/branch/:branchId", () => {
-//   beforeEach(async () => {
-//     await createTestBranch();
-//   });
+describe("GET /api/branch/search", () => {
+  beforeEach(async () => {
+    await createManyTestBranches();
+  });
 
-//   afterEach(async () => {
-//     await removeAllTestBranch();
-//   });
+  afterEach(async () => {
+    await removeAllTestBranch();
+  });
 
-//   it("should can get branch by id", async () => {
-//     const testBranch = await getTestBranch();
-//     console.log("tesBranch", testBranch);
-//     const result = await supertest(web)
-//       .get("/api/contacts/" + testBranch.branchId)
-//       .set("Authorization", "test");
+  it("should can search without parameter", async () => {
+    const result = await supertest(web)
+      .get("/api/branch/search")
+      .set("Authorization", "test");
 
-//     expect(result.status).toBe(200);
-//     expect(result.body.data.branchId).toBe(testBranch.branchId);
-//     expect(result.body.data.branchName).toBe("test");
-//   });
+    expect(result.status).toBe(200);
+    expect(result.body.data.length).toBe(10);
+    expect(result.body.paging.page).toBe(1);
+    expect(result.body.paging.totalPage).toBe(2);
+    expect(result.body.paging.totalItem).toBe(15);
+  });
 
-//     it("should reject if token is invalid", async () => {
-//       const result = await supertest(web)
-//         .get("/api/branch")
-//         .set("Authorization", "test");
-//     });
+  it("should can search to page 2", async () => {
+    const result = await supertest(web)
+      .get("/api/branch/search")
+      .query({
+        page: 2,
+      })
+      .set("Authorization", "test");
 
-//     it("should reject if token is invalid", async () => {
-//       const result = await supertest(web)
-//         .get("/api/branch")
-//         .set("Authorization", "salah");
+    expect(result.status).toBe(200);
+    expect(result.body.data.length).toBe(5);
+    expect(result.body.paging.page).toBe(2);
+    expect(result.body.paging.totalPage).toBe(2);
+    expect(result.body.paging.totalItem).toBe(15);
+  });
+});
 
-//       expect(result.status).toBe(401);
-//       expect(result.body.errors).toBeDefined();
-//     });
-// });
+describe("GET /api/branch/:branchId", () => {
+  beforeEach(async () => {
+    await removeAllTestBranch();
+    await createTestBranch();
+  });
+
+  afterEach(async () => {
+    await removeAllTestBranch();
+  });
+
+  it("should can get branch by id", async () => {
+    const testBranch = await getTestBranch();
+    console.log("tesBranch", testBranch);
+    const result = await supertest(web)
+      .get("/api/branch/" + testBranch.branchId)
+      .set("Authorization", "test");
+
+    expect(result.status).toBe(200);
+    expect(result.body.data.branchId).toBe(testBranch.branchId);
+    expect(result.body.data.branchName).toBe("test");
+  });
+
+  it("should reject if token is invalid", async () => {
+    const result = await supertest(web)
+      .get("/api/branch")
+      .set("Authorization", "salah");
+
+    expect(result.status).toBe(401);
+    expect(result.body.errors).toBeDefined();
+  });
+});
+
+describe("PATCH /api/branch/:branchId", () => {
+  beforeEach(async () => {
+    await removeAllTestBranch();
+    await createTestBranch();
+  });
+
+  afterEach(async () => {
+    await removeAllTestBranch();
+  });
+
+  it("should can update branch", async () => {
+    const testBranch = await getTestBranch();
+    const result = await supertest(web)
+      .patch("/api/branch/" + testBranch.branchId)
+      .set("Authorization", "test")
+      .send({
+        branchName: "test update",
+      });
+
+    expect(result.status).toBe(200);
+    expect(result.body.data.branchId).toBe(testBranch.branchId);
+    expect(result.body.data.branchName).toBe("test update");
+  });
+
+  it("should reject if request is invalid", async () => {
+    const testBranch = await getTestBranch();
+    const result = await supertest(web)
+      .patch("/api/branch/" + testBranch.branchId)
+      .set("Authorization", "test")
+      .send({
+        branchName: "",
+      });
+
+    expect(result.status).toBe(400);
+    expect(result.body.errors).toBeDefined();
+  });
+});
+
+describe("DELETE /api/branch/:branchId", () => {
+  beforeEach(async () => {
+    await removeAllTestBranch();
+    await createTestBranch();
+  });
+
+  afterEach(async () => {
+    await removeAllTestBranch();
+  });
+
+  it("should can delete branch", async () => {
+    const testBranch = await getTestBranch();
+    const result = await supertest(web)
+      .delete("/api/branch/" + testBranch.branchId)
+      .set("Authorization", "test");
+
+    expect(result.status).toBe(200);
+    expect(result.body.data).toBe("OK");
+  });
+});

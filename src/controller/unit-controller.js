@@ -1,8 +1,8 @@
-import branchService from "../service/branch-service.js";
+import unitService from "../service/unit-service.js";
 
 const create = async (req, res, next) => {
   try {
-    const result = await branchService.create(req.body);
+    const result = await unitService.create(req.body);
     res.status(200).json({
       data: result,
     });
@@ -14,7 +14,7 @@ const create = async (req, res, next) => {
 
 const get = async (req, res, next) => {
   try {
-    const result = await branchService.get();
+    const result = await unitService.get();
     res.status(200).json({
       data: result,
     });
@@ -26,8 +26,8 @@ const get = async (req, res, next) => {
 
 const getById = async (req, res, next) => {
   try {
-    const branchId = req.params.branchId;
-    const result = await branchService.getById(branchId);
+    const unitId = req.params.unitId;
+    const result = await unitService.getById(unitId);
     res.status(200).json({
       data: result,
     });
@@ -39,11 +39,11 @@ const getById = async (req, res, next) => {
 
 const update = async (req, res, next) => {
   try {
-    const branchId = req.params.branchId;
+    const unitId = req.params.unitId;
     const request = req.body;
-    request.branchId = branchId;
+    request.unitId = unitId;
 
-    const result = await branchService.update(request);
+    const result = await unitService.update(request);
     res.status(200).json({
       data: result,
     });
@@ -55,31 +55,12 @@ const update = async (req, res, next) => {
 
 const remove = async (req, res, next) => {
   try {
-    const branchId = req.params.branchId;
-    await branchService.remove(branchId);
+    const unitId = req.params.unitId;
+    await unitService.remove(unitId);
     res.status(200).json({
       data: "OK",
     });
   } catch (e) {
-    next(e);
-  }
-};
-
-const search = async (req, res, next) => {
-  try {
-    const request = {
-      branchName: req.query.branchName,
-      page: req.query.page,
-      size: req.query.size,
-    };
-
-    const result = await branchService.search(request);
-    res.status(200).json({
-      data: result.data,
-      paging: result.paging,
-    });
-  } catch (e) {
-    console.error("Branch search error:", e);
     next(e);
   }
 };
@@ -90,5 +71,4 @@ export default {
   getById,
   remove,
   update,
-  search,
 };

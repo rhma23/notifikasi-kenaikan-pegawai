@@ -20,13 +20,13 @@ model Branch {
 
 model Unit {
   unitId    Int @id @default(autoincrement()) 
-  name      String @db.VarChar(100)             
+  unitName      String @db.VarChar(100)             
   placements Placement[]
 }
 
 model Division {
   divisionId Int @id @default(autoincrement()) 
-  name String @db.VarChar(100)             
+  divisionName String @db.VarChar(100)             
   placements Placement[]
 }
 
