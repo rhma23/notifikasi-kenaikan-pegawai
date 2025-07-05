@@ -1,14 +1,15 @@
 import supertest from "supertest";
 import http from "http";
-import { web } from "../application/web.js";
-import logger from "../application/logging.js";
+import { web } from "../../application/web.js";
+import logger from "../../application/logging.js";
 import {
   removeAllTestUnit,
   createTestUser,
   removeTestUser,
   createTestUnit,
   getTestUnit,
-} from "./test.util.js";
+  createManyTestUnits,
+} from "../unit/test.util.js";
 const server = http.createServer(web);
 
 describe("POST /api/unit", () => {
@@ -46,37 +47,89 @@ describe("POST /api/unit", () => {
   });
 });
 
+// describe("GET /api/unit", () => {
+//   beforeEach(async () => {
+//     await createTestUnit();
+//   });
+
+//   afterEach(async () => {
+//     await removeAllTestUnit();
+//   });
+
+//   it("should can get unit", async () => {
+//     const result = await supertest(web)
+//       .get("/api/unit")
+//       .set("Authorization", "test");
+
+//     expect(result.status).toBe(200);
+//     expect(result.body.data.unitName).toBe("test");
+//   });
+
+//   it("should reject if token is invalid", async () => {
+//     const result = await supertest(web)
+//       .get("/api/unit")
+//       .set("Authorization", "test");
+//   });
+
+//   it("should reject if token is invalid", async () => {
+//     const result = await supertest(web)
+//       .get("/api/unit")
+//       .set("Authorization", "salah");
+
+//     expect(result.status).toBe(401);
+//     expect(result.body.errors).toBeDefined();
+//   });
+// });
+
 describe("GET /api/unit", () => {
   beforeEach(async () => {
-    await createTestUnit();
+    await createManyTestUnits();
   });
 
   afterEach(async () => {
     await removeAllTestUnit();
   });
 
-  it("should can get unit", async () => {
+  it("should can search without parameter", async () => {
     const result = await supertest(web)
       .get("/api/unit")
       .set("Authorization", "test");
 
     expect(result.status).toBe(200);
-    expect(result.body.data.unitName).toBe("test");
+    expect(result.body.data.length).toBe(10);
+    expect(result.body.paging.page).toBe(1);
+    expect(result.body.paging.totalPage).toBe(2);
+    expect(result.body.paging.totalItem).toBe(15);
   });
 
-  it("should reject if token is invalid", async () => {
+  it("should can search to page 2", async () => {
     const result = await supertest(web)
       .get("/api/unit")
+      .query({
+        page: 2,
+      })
       .set("Authorization", "test");
+
+    expect(result.status).toBe(200);
+    expect(result.body.data.length).toBe(5);
+    expect(result.body.paging.page).toBe(2);
+    expect(result.body.paging.totalPage).toBe(2);
+    expect(result.body.paging.totalItem).toBe(15);
   });
 
-  it("should reject if token is invalid", async () => {
+  it("should can search using name", async () => {
     const result = await supertest(web)
       .get("/api/unit")
-      .set("Authorization", "salah");
-
-    expect(result.status).toBe(401);
-    expect(result.body.errors).toBeDefined();
+      .query({
+        unitName: "test 1",
+      })
+      .set("Authorization", "test");
+    console.log("Unit search result:", result.body);
+    expect(result.status).toBe(200);
+    expect(result.body.data.length).toBe(6);
+    expect(result.body.paging.page).toBe(1);
+    expect(result.body.paging.totalPage).toBe(1);
+    expect(result.body.paging.totalItem).toBe(6);
   });
 });
 

@@ -20,13 +20,15 @@ userRouter.patch("/api/branch/:branchId", branchController.update);
 userRouter.delete("/api/branch/:branchId", branchController.remove);
 // unit API
 userRouter.post("/api/unit", unitController.create);
-userRouter.get("/api/unit", unitController.get);
+// userRouter.get("/api/unit", unitController.get);
+userRouter.get("/api/unit", unitController.search);
 userRouter.get("/api/unit/:unitId", unitController.getById);
 userRouter.patch("/api/unit/:unitId", unitController.update);
 userRouter.delete("/api/unit/:unitId", unitController.remove);
 // division API
 userRouter.post("/api/division", divisionController.create);
-userRouter.get("/api/division", divisionController.get);
+// userRouter.get("/api/division", divisionController.get);
+userRouter.get("/api/division", divisionController.search);
 userRouter.get("/api/division/:divisionId", divisionController.getById);
 userRouter.patch("/api/division/:divisionId", divisionController.update);
 userRouter.delete("/api/division/:divisionId", divisionController.remove);

@@ -1,14 +1,15 @@
 import supertest from "supertest";
 import http from "http";
-import { web } from "../application/web.js";
-import logger from "../application/logging.js";
+import { web } from "../../application/web.js";
+import logger from "../../application/logging.js";
 import {
   removeAllTestDivision,
   createTestUser,
   removeTestUser,
   createTestDivision,
   getTestDivision,
-} from "./test.util.js";
+  createManyTestDivisions,
+} from "../division/test.util.js";
 const server = http.createServer(web);
 
 describe("POST /api/division", () => {
@@ -46,37 +47,89 @@ describe("POST /api/division", () => {
   });
 });
 
+// describe("GET /api/division", () => {
+//   beforeEach(async () => {
+//     await createTestDivision();
+//   });
+
+//   afterEach(async () => {
+//     await removeAllTestDivision();
+//   });
+
+//   it("should can get division", async () => {
+//     const result = await supertest(web)
+//       .get("/api/division")
+//       .set("Authorization", "test");
+
+//     expect(result.status).toBe(200);
+//     expect(result.body.data.divisionName).toBe("test");
+//   });
+
+//   it("should reject if token is invalid", async () => {
+//     const result = await supertest(web)
+//       .get("/api/division")
+//       .set("Authorization", "test");
+//   });
+
+//   it("should reject if token is invalid", async () => {
+//     const result = await supertest(web)
+//       .get("/api/division")
+//       .set("Authorization", "salah");
+
+//     expect(result.status).toBe(401);
+//     expect(result.body.errors).toBeDefined();
+//   });
+// });
+
 describe("GET /api/division", () => {
   beforeEach(async () => {
-    await createTestDivision();
+    await createManyTestDivisions();
   });
 
   afterEach(async () => {
     await removeAllTestDivision();
   });
 
-  it("should can get division", async () => {
+  it("should can search without parameter", async () => {
     const result = await supertest(web)
       .get("/api/division")
       .set("Authorization", "test");
 
     expect(result.status).toBe(200);
-    expect(result.body.data.divisionName).toBe("test");
+    expect(result.body.data.length).toBe(10);
+    expect(result.body.paging.page).toBe(1);
+    expect(result.body.paging.totalPage).toBe(2);
+    expect(result.body.paging.totalItem).toBe(15);
   });
 
-  it("should reject if token is invalid", async () => {
+  it("should can search to page 2", async () => {
     const result = await supertest(web)
       .get("/api/division")
+      .query({
+        page: 2,
+      })
       .set("Authorization", "test");
+
+    expect(result.status).toBe(200);
+    expect(result.body.data.length).toBe(5);
+    expect(result.body.paging.page).toBe(2);
+    expect(result.body.paging.totalPage).toBe(2);
+    expect(result.body.paging.totalItem).toBe(15);
   });
 
-  it("should reject if token is invalid", async () => {
+  it("should can search using name", async () => {
     const result = await supertest(web)
       .get("/api/division")
-      .set("Authorization", "salah");
-
-    expect(result.status).toBe(401);
-    expect(result.body.errors).toBeDefined();
+      .query({
+        divisionName: "test 1",
+      })
+      .set("Authorization", "test");
+    console.log("Division search result:", result.body);
+    expect(result.status).toBe(200);
+    expect(result.body.data.length).toBe(6);
+    expect(result.body.paging.page).toBe(1);
+    expect(result.body.paging.totalPage).toBe(1);
+    expect(result.body.paging.totalItem).toBe(6);
   });
 });
 

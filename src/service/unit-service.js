@@ -3,6 +3,7 @@ import {
   createUnitValidation,
   getUnitValidation,
   updateUnitValidation,
+  searchUnitValidation,
 } from "../validation/unit-validation.js";
 import { prismaClient } from "../application/database.js";
 import { ResponseError } from "../error/response-error.js";
@@ -19,13 +20,13 @@ const create = async (request) => {
   });
 };
 
-const get = async () => {
-  const unit = await prismaClient.unit.findFirst();
-  if (!unit) {
-    throw new ResponseError(404, "Unit not found");
-  }
-  return unit;
-};
+// const get = async () => {
+//   const unit = await prismaClient.unit.findFirst();
+//   if (!unit) {
+//     throw new ResponseError(404, "Unit not found");
+//   }
+//   return unit;
+// };
 
 const getById = async (unitId) => {
   const unit = await prismaClient.unit.findUnique({
@@ -81,10 +82,57 @@ const remove = async (unitId) => {
   });
 };
 
+const search = async (request) => {
+  request = validate(searchUnitValidation, request);
+
+  // 1 ((page - 1) * size) = 0
+  // 2 ((page - 1) * size) = 10
+  const skip = (request.page - 1) * request.size;
+
+  const filters = [];
+
+  if (request.unitName && request.unitName.trim() !== "") {
+    filters.push({
+      unitName: {
+        contains: request.unitName,
+      },
+    });
+  }
+
+  try {
+    const units = await prismaClient.unit.findMany({
+      where: {
+        AND: filters,
+      },
+      take: request.size,
+      skip: skip,
+    });
+
+    const totalItems = await prismaClient.unit.count({
+      where: {
+        AND: filters,
+      },
+    });
+
+    return {
+      data: units,
+      paging: {
+        page: request.page,
+        totalItem: totalItems,
+        totalPage: Math.ceil(totalItems / request.size),
+      },
+    };
+  } catch (err) {
+    console.error("Prisma division search error:", err);
+    throw err;
+  }
+};
+
 export default {
   create,
-  get,
+  // get,
   getById,
   remove,
   update,
+  search,
 };

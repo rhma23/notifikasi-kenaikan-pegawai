@@ -1,7 +1,7 @@
 import supertest from "supertest";
 import http from "http";
-import { web } from "../application/web.js";
-import logger from "../application/logging.js";
+import { web } from "../../application/web.js";
+import logger from "../../application/logging.js";
 import {
   removeAllTestBranch,
   createTestUser,
@@ -9,7 +9,7 @@ import {
   createTestBranch,
   getTestBranch,
   createManyTestBranches,
-} from "./test.util.js";
+} from "../branch/test.util.js";
 import bcrypt from "bcrypt";
 const server = http.createServer(web);
 

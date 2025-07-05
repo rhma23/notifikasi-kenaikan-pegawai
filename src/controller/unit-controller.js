@@ -12,17 +12,17 @@ const create = async (req, res, next) => {
   }
 };
 
-const get = async (req, res, next) => {
-  try {
-    const result = await unitService.get();
-    res.status(200).json({
-      data: result,
-    });
-  } catch (e) {
-    console.error(e);
-    next(e);
-  }
-};
+// const get = async (req, res, next) => {
+//   try {
+//     const result = await unitService.get();
+//     res.status(200).json({
+//       data: result,
+//     });
+//   } catch (e) {
+//     console.error(e);
+//     next(e);
+//   }
+// };
 
 const getById = async (req, res, next) => {
   try {
@@ -65,10 +65,30 @@ const remove = async (req, res, next) => {
   }
 };
 
+const search = async (req, res, next) => {
+  try {
+    const request = {
+      unitName: req.query.unitName,
+      page: req.query.page,
+      size: req.query.size,
+    };
+
+    const result = await unitService.search(request);
+    res.status(200).json({
+      data: result.data,
+      paging: result.paging,
+    });
+  } catch (e) {
+    console.error("Unit search error:", e);
+    next(e);
+  }
+};
+
 export default {
   create,
-  get,
+  // get,
   getById,
   remove,
   update,
+  search,
 };

@@ -22,9 +22,17 @@ const updateUserValidation = Joi.object({
   phoneNumber: Joi.string().max(15).required().optional(),
   role: Joi.string().required().optional(),
 });
+
+const searchUserValidation = Joi.object({
+  page: Joi.number().min(1).positive().default(1),
+  size: Joi.number().min(1).positive().max(100).default(10),
+  unitName: Joi.string().optional(),
+});
+
 export {
   createUserValidation,
   loginUserValidation,
   getUserValidation,
   updateUserValidation,
+  searchUserValidation,
 };
