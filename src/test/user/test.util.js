@@ -8,6 +8,10 @@ export const removeTestUser = async () => {
   });
 };
 
+export const removeAllTestUsers = async () => {
+  await prismaClient.user.deleteMany({});
+};
+
 export const createTestUser = async () => {
   await prismaClient.user.create({
     data: {

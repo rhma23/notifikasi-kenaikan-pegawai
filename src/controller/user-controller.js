@@ -63,10 +63,32 @@ const logout = async (req, res, next) => {
   }
 };
 
+const search = async (req, res, next) => {
+  try {
+    const request = {
+      username: req.query.username,
+      email: req.query.email,
+      phoneNumber: req.query.phoneNumber,
+      page: req.query.page,
+      size: req.query.size,
+    };
+
+    const result = await userService.search(request);
+    res.status(200).json({
+      data: result.data,
+      paging: result.paging,
+    });
+  } catch (e) {
+    console.error("Branch search error:", e);
+    next(e);
+  }
+};
+
 export default {
   create,
   login,
   get,
   update,
   logout,
+  search,
 };

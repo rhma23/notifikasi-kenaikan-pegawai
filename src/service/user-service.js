@@ -174,16 +174,32 @@ const search = async (request) => {
 
   const filters = [];
 
-  if (request.unitName && request.unitName.trim() !== "") {
+  if (request.username && request.username.trim() !== "") {
     filters.push({
-      unitName: {
-        contains: request.unitName,
+      username: {
+        contains: request.username,
+      },
+    });
+  }
+
+  if (request.email && request.email.trim() !== "") {
+    filters.push({
+      email: {
+        contains: request.email,
+      },
+    });
+  }
+
+  if (request.phoneNumber && request.phoneNumber.trim() !== "") {
+    filters.push({
+      phoneNumber: {
+        contains: request.phoneNumber,
       },
     });
   }
 
   try {
-    const units = await prismaClient.unit.findMany({
+    const users = await prismaClient.user.findMany({
       where: {
         AND: filters,
       },
@@ -191,14 +207,14 @@ const search = async (request) => {
       skip: skip,
     });
 
-    const totalItems = await prismaClient.unit.count({
+    const totalItems = await prismaClient.user.count({
       where: {
         AND: filters,
       },
     });
 
     return {
-      data: units,
+      data: users,
       paging: {
         page: request.page,
         totalItem: totalItems,
@@ -206,7 +222,7 @@ const search = async (request) => {
       },
     };
   } catch (err) {
-    console.error("Prisma division search error:", err);
+    console.error("Prisma user search error:", err);
     throw err;
   }
 };

@@ -2,7 +2,13 @@ import supertest from "supertest";
 import http from "http";
 import { web } from "../../application/web.js";
 import logger from "../../application/logging.js";
-import { removeTestUser, createTestUser, getTestUser } from "./test.util.js";
+import {
+  removeTestUser,
+  createTestUser,
+  getTestUser,
+  createManyTestUsers,
+  removeAllTestUsers,
+} from "./test.util.js";
 import bcrypt from "bcrypt";
 const server = http.createServer(web);
 
@@ -122,6 +128,58 @@ describe("GET /api/users/current", () => {
 
     expect(result.status).toBe(401);
     expect(result.body.errors).toBeDefined();
+  });
+});
+
+describe("GET /api/users", () => {
+  beforeEach(async () => {
+    await createTestUser();
+    await createManyTestUsers();
+  });
+
+  afterEach(async () => {
+    await removeAllTestUsers();
+  });
+
+  it("should can search without parameter", async () => {
+    const result = await supertest(web)
+      .get("/api/users")
+      .set("Authorization", "test");
+
+    expect(result.status).toBe(200);
+    expect(result.body.data.length).toBe(10);
+    expect(result.body.paging.page).toBe(1);
+    expect(result.body.paging.totalPage).toBe(2);
+    expect(result.body.paging.totalItem).toBe(16);
+  });
+
+  it("should can search to page 2", async () => {
+    const result = await supertest(web)
+      .get("/api/users")
+      .query({
+        page: 2,
+      })
+      .set("Authorization", "test");
+
+    expect(result.status).toBe(200);
+    expect(result.body.data.length).toBe(6);
+    expect(result.body.paging.page).toBe(2);
+    expect(result.body.paging.totalPage).toBe(2);
+    expect(result.body.paging.totalItem).toBe(16);
+  });
+
+  it("should can search using name", async () => {
+    const result = await supertest(web)
+      .get("/api/users")
+      .query({
+        username: "test 1",
+      })
+      .set("Authorization", "test");
+    expect(result.status).toBe(200);
+    expect(result.body.data.length).toBe(6);
+    expect(result.body.paging.page).toBe(1);
+    expect(result.body.paging.totalPage).toBe(1);
+    expect(result.body.paging.totalItem).toBe(6);
   });
 });
 
