@@ -13,8 +13,8 @@ userRouter.patch("/api/users/current", userController.update);
 userRouter.delete("/api/users/logout", userController.logout);
 // branch API
 userRouter.post("/api/branch", branchController.create);
-userRouter.get("/api/branch", branchController.get);
-userRouter.get("/api/branch/search", branchController.search);
+// userRouter.get("/api/branch", branchController.get);
+userRouter.get("/api/branch", branchController.search);
 userRouter.get("/api/branch/:branchId", branchController.getById);
 userRouter.patch("/api/branch/:branchId", branchController.update);
 userRouter.delete("/api/branch/:branchId", branchController.remove);

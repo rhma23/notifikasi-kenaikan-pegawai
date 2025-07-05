@@ -12,17 +12,17 @@ const create = async (req, res, next) => {
   }
 };
 
-const get = async (req, res, next) => {
-  try {
-    const result = await branchService.get();
-    res.status(200).json({
-      data: result,
-    });
-  } catch (e) {
-    console.error(e);
-    next(e);
-  }
-};
+// const get = async (req, res, next) => {
+//   try {
+//     const result = await branchService.get();
+//     res.status(200).json({
+//       data: result,
+//     });
+//   } catch (e) {
+//     console.error(e);
+//     next(e);
+//   }
+// };
 
 const getById = async (req, res, next) => {
   try {
@@ -86,7 +86,7 @@ const search = async (req, res, next) => {
 
 export default {
   create,
-  get,
+  // get,
   getById,
   remove,
   update,

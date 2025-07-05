@@ -4,7 +4,7 @@ const createBranchValidation = Joi.object({
   branchName: Joi.string().max(100).required(),
 });
 
-const getBranchValidation = Joi.string().max(100).optional();
+// const getBranchValidation = Joi.string().max(100).optional();
 
 const updateBranchValidation = Joi.object({
   branchId: Joi.number().required(),
@@ -23,7 +23,7 @@ const searchBranchValidation = Joi.object({
 
 export {
   createBranchValidation,
-  getBranchValidation,
+  // getBranchValidation,
   updateBranchValidation,
   deleteBranchValidation,
   searchBranchValidation,

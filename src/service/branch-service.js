@@ -21,13 +21,13 @@ const create = async (request) => {
   });
 };
 
-const get = async () => {
-  const branch = await prismaClient.branch.findFirst();
-  if (!branch) {
-    throw new ResponseError(404, "Branch not found");
-  }
-  return branch;
-};
+// const get = async () => {
+//   const branch = await prismaClient.branch.findFirst();
+//   if (!branch) {
+//     throw new ResponseError(404, "Branch not found");
+//   }
+//   return branch;
+// };
 
 const getById = async (branchId) => {
   if (!branchId || isNaN(Number(branchId))) {
@@ -134,7 +134,7 @@ const search = async (request) => {
 
 export default {
   create,
-  get,
+  // get,
   getById,
   remove,
   update,

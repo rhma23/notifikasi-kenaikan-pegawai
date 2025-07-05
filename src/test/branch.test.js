@@ -48,41 +48,41 @@ describe("POST /api/users/create", () => {
   });
 });
 
+// describe("GET /api/branch", () => {
+//   beforeEach(async () => {
+//     await createTestBranch();
+//   });
+
+//   afterEach(async () => {
+//     await removeAllTestBranch();
+//   });
+
+//   it("should can get branch", async () => {
+//     const result = await supertest(web)
+//       .get("/api/branch")
+//       .set("Authorization", "test");
+
+//     expect(result.status).toBe(200);
+//     expect(result.body.data.branchName).toBe("test");
+//   });
+
+//   it("should reject if token is invalid", async () => {
+//     const result = await supertest(web)
+//       .get("/api/branch")
+//       .set("Authorization", "test");
+//   });
+
+//   it("should reject if token is invalid", async () => {
+//     const result = await supertest(web)
+//       .get("/api/branch")
+//       .set("Authorization", "salah");
+
+//     expect(result.status).toBe(401);
+//     expect(result.body.errors).toBeDefined();
+//   });
+// });
+
 describe("GET /api/branch", () => {
-  beforeEach(async () => {
-    await createTestBranch();
-  });
-
-  afterEach(async () => {
-    await removeAllTestBranch();
-  });
-
-  it("should can get branch", async () => {
-    const result = await supertest(web)
-      .get("/api/branch")
-      .set("Authorization", "test");
-
-    expect(result.status).toBe(200);
-    expect(result.body.data.branchName).toBe("test");
-  });
-
-  it("should reject if token is invalid", async () => {
-    const result = await supertest(web)
-      .get("/api/branch")
-      .set("Authorization", "test");
-  });
-
-  it("should reject if token is invalid", async () => {
-    const result = await supertest(web)
-      .get("/api/branch")
-      .set("Authorization", "salah");
-
-    expect(result.status).toBe(401);
-    expect(result.body.errors).toBeDefined();
-  });
-});
-
-describe("GET /api/branch/search", () => {
   beforeEach(async () => {
     await createManyTestBranches();
   });
@@ -93,7 +93,7 @@ describe("GET /api/branch/search", () => {
 
   it("should can search without parameter", async () => {
     const result = await supertest(web)
-      .get("/api/branch/search")
+      .get("/api/branch")
       .set("Authorization", "test");
 
     expect(result.status).toBe(200);
@@ -105,7 +105,7 @@ describe("GET /api/branch/search", () => {
 
   it("should can search to page 2", async () => {
     const result = await supertest(web)
-      .get("/api/branch/search")
+      .get("/api/branch")
       .query({
         page: 2,
       })
@@ -116,6 +116,21 @@ describe("GET /api/branch/search", () => {
     expect(result.body.paging.page).toBe(2);
     expect(result.body.paging.totalPage).toBe(2);
     expect(result.body.paging.totalItem).toBe(15);
+  });
+
+  it("should can search using name", async () => {
+    const result = await supertest(web)
+      .get("/api/branch")
+      .query({
+        branchName: "test 1",
+      })
+      .set("Authorization", "test");
+    console.log("Branch search result:", result.body);
+    expect(result.status).toBe(200);
+    expect(result.body.data.length).toBe(6);
+    expect(result.body.paging.page).toBe(1);
+    expect(result.body.paging.totalPage).toBe(1);
+    expect(result.body.paging.totalItem).toBe(6);
   });
 });
 
@@ -131,7 +146,7 @@ describe("GET /api/branch/:branchId", () => {
 
   it("should can get branch by id", async () => {
     const testBranch = await getTestBranch();
-    console.log("tesBranch", testBranch);
+
     const result = await supertest(web)
       .get("/api/branch/" + testBranch.branchId)
       .set("Authorization", "test");
