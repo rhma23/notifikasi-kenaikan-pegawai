@@ -6,6 +6,10 @@ const createBranchValidation = Joi.object({
 
 // const getBranchValidation = Joi.string().max(100).optional();
 
+const getBranchByIdValidation = Joi.object({
+  branchId: Joi.number().required(),
+});
+
 const updateBranchValidation = Joi.object({
   branchId: Joi.number().required(),
   branchName: Joi.string().max(100).required(),

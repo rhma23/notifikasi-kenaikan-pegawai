@@ -131,6 +131,41 @@ describe("GET /api/users/current", () => {
   });
 });
 
+describe("GET /api/users/:userId", () => {
+  beforeEach(async () => {
+    await removeAllTestUsers();
+    await createTestUser();
+  });
+
+  afterEach(async () => {
+    await removeAllTestUsers();
+  });
+
+  it("should can get user by id", async () => {
+    const testUser = await getTestUser();
+    const result = await supertest(web)
+      .get("/api/users/" + testUser.userId)
+      .set("Authorization", "test");
+
+    expect(result.status).toBe(200);
+    expect(result.body.data.userId).toBe(testUser.userId);
+    expect(result.body.data.username).toBe("test");
+    expect(result.body.data.email).toBe("test@gmail.com");
+    expect(result.body.data.phoneNumber).toBe("08978974515");
+    expect(result.body.data.role).toBe("admin");
+  });
+
+  it("should reject if token is invalid", async () => {
+    const testUser = await getTestUser();
+    const result = await supertest(web)
+      .get("/api/users/" + testUser.userId)
+      .set("Authorization", "salah");
+
+    expect(result.status).toBe(401);
+    expect(result.body.errors).toBeDefined();
+  });
+});
+
 describe("GET /api/users", () => {
   beforeEach(async () => {
     await createTestUser();

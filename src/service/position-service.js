@@ -3,6 +3,8 @@ import {
   createPositionValidation,
   getPositionValidation,
   updatePositionValidation,
+  searchPositionValidation,
+  deletePositionValidation,
 } from "../validation/position-validation.js";
 import { prismaClient } from "../application/database.js";
 import { ResponseError } from "../error/response-error.js";
@@ -19,13 +21,13 @@ const create = async (request) => {
   });
 };
 
-const get = async () => {
-  const position = await prismaClient.position.findFirst();
-  if (!position) {
-    throw new ResponseError(404, "Position not found");
-  }
-  return position;
-};
+// const get = async () => {
+//   const position = await prismaClient.position.findFirst();
+//   if (!position) {
+//     throw new ResponseError(404, "Position not found");
+//   }
+//   return position;
+// };
 
 const getById = async (positionId) => {
   const position = await prismaClient.position.findUnique({
@@ -81,10 +83,57 @@ const remove = async (positionId) => {
   });
 };
 
+const search = async (request) => {
+  request = validate(searchPositionValidation, request);
+
+  // 1 ((page - 1) * size) = 0
+  // 2 ((page - 1) * size) = 10
+  const skip = (request.page - 1) * request.size;
+
+  const filters = [];
+
+  if (request.positionName && request.positionName.trim() !== "") {
+    filters.push({
+      positionName: {
+        contains: request.positionName,
+      },
+    });
+  }
+
+  try {
+    const positions = await prismaClient.position.findMany({
+      where: {
+        AND: filters,
+      },
+      take: request.size,
+      skip: skip,
+    });
+
+    const totalItems = await prismaClient.position.count({
+      where: {
+        AND: filters,
+      },
+    });
+
+    return {
+      data: positions,
+      paging: {
+        page: request.page,
+        totalItem: totalItems,
+        totalPage: Math.ceil(totalItems / request.size),
+      },
+    };
+  } catch (err) {
+    console.error("Prisma position search error:", err);
+    throw err;
+  }
+};
+
 export default {
   create,
-  get,
+  // get,
   getById,
+  search,
   remove,
   update,
 };

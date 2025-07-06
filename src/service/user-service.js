@@ -98,6 +98,28 @@ const get = async (username) => {
   return user;
 };
 
+const getById = async (userId) => {
+  if (!userId || isNaN(Number(userId))) {
+    throw new ResponseError(400, "userId is required and must be a number");
+  }
+  const user = await prismaClient.user.findUnique({
+    where: {
+      userId: Number(userId),
+    },
+    select: {
+      userId: true,
+      username: true,
+      email: true,
+      phoneNumber: true,
+      role: true,
+    },
+  });
+  if (!user) {
+    throw new ResponseError(404, "User not found");
+  }
+  return user;
+};
+
 const update = async (request) => {
   const user = validate(updateUserValidation, request);
 
@@ -231,6 +253,7 @@ export default {
   create,
   login,
   get,
+  getById,
   search,
   update,
   logout,

@@ -11,6 +11,7 @@ Request Body:
   "username": "user123",
   "password": "rahasia123",
   "email": "user@gmail.com",
+  "phoneNumber": "08123456789",
   "role": "admin"
 }
 ```
@@ -22,6 +23,7 @@ Response Body Success:
   "data": {
     "username": "user123",
     "email": "user@gmail.com",
+    "phoneNumber": "08123456789",
     "role": "admin"
   }
 }
@@ -81,6 +83,7 @@ Response Body Success:
   "data": {
     "username": "user123",
     "email": "user@gmail.com",
+    "phoneNumber": "08123456789",
     "role": "admin"
   }
 }
@@ -94,7 +97,7 @@ Response Body Erros:
 }
 ```
 
-## Get All User API
+## Get User API
 
 End Point: Get /api/users/current
 
@@ -110,16 +113,19 @@ Response Body Success:
     {
       "username": "user123",
       "email": "user@gmail.com",
+      "phoneNumber": "08123456789",
       "role": "admin"
     },
     {
       "username": "user456",
       "email": "user456@gmail.com",
+      "phoneNumber": "08234567890",
       "role": "direksi"
     },
     {
       "username": "user789",
       "email": "user789@gmail.com",
+      "phoneNumber": "08345678901",
       "role": "admin"
     }
   ]
@@ -147,6 +153,7 @@ Headers:
   "username": "user123update",
   "password": "rahasia123update",
   "email": "update@gmail.com",
+  "phoneNumber": "08123456789",
   "role": "direksi"
 }
 ```
@@ -159,6 +166,7 @@ Response Body Success:
     "username": "user123update",
     "password": "rahasia123update",
     "email": "update@gmail.com",
+    "phoneNumber": "08123456789",
     "role": "direksi"
   }
 }
