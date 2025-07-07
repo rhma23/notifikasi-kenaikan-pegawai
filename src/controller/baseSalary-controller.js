@@ -1,9 +1,9 @@
 import { level } from "winston";
-import educationService from "../service/education-service.js";
+import baseSalaryService from "../service/baseSalary-service.js";
 
 const create = async (req, res, next) => {
   try {
-    const result = await educationService.create(req.body);
+    const result = await baseSalaryService.create(req.body);
     res.status(200).json({
       data: result,
     });
@@ -27,8 +27,8 @@ const create = async (req, res, next) => {
 
 const getById = async (req, res, next) => {
   try {
-    const educationId = req.params.educationId;
-    const result = await educationService.getById(educationId);
+    const baseSalaryId = req.params.baseSalaryId;
+    const result = await baseSalaryService.getById(baseSalaryId);
     res.status(200).json({
       data: result,
     });
@@ -40,11 +40,11 @@ const getById = async (req, res, next) => {
 
 const update = async (req, res, next) => {
   try {
-    const educationId = req.params.educationId;
+    const baseSalaryId = req.params.baseSalaryId;
     const request = req.body;
-    request.educationId = educationId;
+    request.baseSalaryId = baseSalaryId;
 
-    const result = await educationService.update(request);
+    const result = await baseSalaryService.update(request);
     res.status(200).json({
       data: result,
     });
@@ -56,8 +56,8 @@ const update = async (req, res, next) => {
 
 const remove = async (req, res, next) => {
   try {
-    const educationId = req.params.educationId;
-    await educationService.remove(educationId);
+    const baseSalaryId = req.params.baseSalaryId;
+    await baseSalaryService.remove(baseSalaryId);
     res.status(200).json({
       data: "OK",
     });
@@ -69,19 +69,19 @@ const remove = async (req, res, next) => {
 const search = async (req, res, next) => {
   try {
     const request = {
-      level: req.query.level,
-      major: req.query.major,
+      type: req.query.type,
+      yearsOfService: req.query.yearsOfService,
       page: req.query.page,
       size: req.query.size,
     };
 
-    const result = await educationService.search(request);
+    const result = await baseSalaryService.search(request);
     res.status(200).json({
       data: result.data,
       paging: result.paging,
     });
   } catch (e) {
-    console.error("Education search error:", e);
+    console.error("Base Salary search error:", e);
     next(e);
   }
 };

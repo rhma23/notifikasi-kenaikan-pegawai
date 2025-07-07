@@ -45,10 +45,10 @@ model Position {
 }
 
 model BaseSalary {
-  id Int @id @default(autoincrement())
+  baseSalaryId Int @id @default(autoincrement())
   amount    Int      
-  grade     String    @db.VarChar(100)              
-  serviceYears String?                            
+  type     String    @db.VarChar(35)              
+  yearsOfService String?     @db.VarChar(2)                         
   grades     Grade[]
   salaryHistories SalaryHistory[]
 }
@@ -59,7 +59,7 @@ model Grade {
   title      String    @db.VarChar(100)             
   grade      String    @db.VarChar(100)            
 
-  baseSalary BaseSalary @relation(fields: [baseSalaryId], references: [id])
+  baseSalary BaseSalary @relation(fields: [baseSalaryId], references: [baseSalaryId])
   employees  Employee[]
   gradeHistories GradeHistory[]
   salaryHistories SalaryHistory[]
@@ -171,7 +171,7 @@ model SalaryHistory {
 
   employee     Employee  @relation(fields: [employeeId], references: [id])
   grade         Grade      @relation(fields: [gradeId], references: [gradeId])
-  baseSalary   BaseSalary @relation(fields: [baseSalaryId], references: [id])
+  baseSalary   BaseSalary @relation(fields: [baseSalaryId], references: [baseSalaryId])
 }
 
 model GradeHistory {

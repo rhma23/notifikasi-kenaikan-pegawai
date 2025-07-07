@@ -4,7 +4,9 @@ import unitController from "../controller/unit-controller.js";
 import divisionController from "../controller/division-controller.js";
 import branchController from "../controller/branch-controller.js";
 import positionController from "../controller/position-controller.js";
+import educationController from "../controller/education-controller.js";
 import { authMiddleware } from "../middleware/auth-middleware.js";
+import baseSalaryController from "../controller/baseSalary-controller.js";
 
 const userRouter = new express.Router();
 userRouter.use(authMiddleware);
@@ -54,5 +56,15 @@ userRouter.get("/api/education", educationController.search);
 userRouter.get("/api/education/:educationId", educationController.getById);
 userRouter.patch("/api/education/:educationId", educationController.update);
 userRouter.delete("/api/education/:educationId", educationController.remove);
+// base-salary API
+userRouter.post("/api/base-salary", baseSalaryController.create);
+// userRouter.get("/api/base-salary", baseSalaryController.get);
+userRouter.get("/api/base-salary", baseSalaryController.search);
+userRouter.get("/api/base-salary/:baseSalaryId", baseSalaryController.getById);
+userRouter.patch("/api/base-salary/:baseSalaryId", baseSalaryController.update);
+userRouter.delete(
+  "/api/base-salary/:baseSalaryId",
+  baseSalaryController.remove
+);
 
 export { userRouter };
