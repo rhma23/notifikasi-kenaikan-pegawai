@@ -29,12 +29,6 @@ export const getTestUser = async () => {
   });
 };
 
-export const removeAllTestBaseSalary = async () => {
-  // Delete dependents first to avoid foreign key constraint errors
-  await prismaClient.grade.deleteMany();
-  await prismaClient.baseSalary.deleteMany();
-};
-
 export const createTestBaseSalary = async () => {
   await prismaClient.baseSalary.create({
     data: {
@@ -51,13 +45,52 @@ export const getTestBaseSalary = async () => {
   });
 };
 
-export const createManyTestBaseSalary = async () => {
+export const removeAllTestBaseSalary = async () => {
+  await prismaClient.grade.deleteMany({});
+  await prismaClient.baseSalary.deleteMany({});
+};
+
+export const removeAllTestGrade = async () => {
+  await prismaClient.grade.deleteMany({});
+};
+
+export const createTestGrade = async () => {
+  const baseSalary = await prismaClient.baseSalary.create({
+    data: {
+      amount: 1000000,
+      type: "test",
+      yearsOfService: "1",
+    },
+  });
+  await prismaClient.grade.create({
+    data: {
+      gradeName: "test",
+      type: "test",
+      baseSalaryId: baseSalary.baseSalaryId,
+    },
+  });
+};
+
+export const getTestGrade = async () => {
+  return prismaClient.grade.findFirst({
+    where: { gradeName: "test" },
+  });
+};
+
+export const createManyTestGrade = async () => {
+  const baseSalary = await prismaClient.baseSalary.create({
+    data: {
+      amount: 1000000,
+      type: "test",
+      yearsOfService: "1",
+    },
+  });
   for (let i = 0; i < 15; i++) {
-    await prismaClient.baseSalary.create({
+    await prismaClient.grade.create({
       data: {
-        amount: 1000000 + i,
+        gradeName: `test ${i}`,
         type: `test ${i}`,
-        yearsOfService: `${i + 1}`,
+        baseSalaryId: baseSalary.baseSalaryId,
       },
     });
   }

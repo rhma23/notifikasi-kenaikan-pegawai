@@ -56,8 +56,8 @@ model BaseSalary {
 model Grade {
   gradeId         Int       @id @default(autoincrement()) 
   baseSalaryId Int    
-  title      String    @db.VarChar(100)             
-  grade      String    @db.VarChar(100)            
+  gradeName      String    @db.VarChar(100)             
+  type      String    @db.VarChar(100)            
 
   baseSalary BaseSalary @relation(fields: [baseSalaryId], references: [baseSalaryId])
   employees  Employee[]

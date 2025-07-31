@@ -5,6 +5,7 @@ import divisionController from "../controller/division-controller.js";
 import branchController from "../controller/branch-controller.js";
 import positionController from "../controller/position-controller.js";
 import educationController from "../controller/education-controller.js";
+import gradeController from "../controller/grade-controller.js";
 import { authMiddleware } from "../middleware/auth-middleware.js";
 import baseSalaryController from "../controller/baseSalary-controller.js";
 
@@ -66,5 +67,13 @@ userRouter.delete(
   "/api/base-salary/:baseSalaryId",
   baseSalaryController.remove
 );
+
+// grade API
+userRouter.post("/api/grade", gradeController.create);
+// userRouter.get("/api/grade", gradeController.get);
+userRouter.get("/api/grade", gradeController.search);
+userRouter.get("/api/grade/:gradeId", gradeController.getById);
+userRouter.patch("/api/grade/:gradeId", gradeController.update);
+userRouter.delete("/api/grade/:gradeId", gradeController.remove);
 
 export { userRouter };
